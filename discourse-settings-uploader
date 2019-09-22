@@ -13,6 +13,9 @@ API_KEY=ARGV[1]
 API_USERNAME=ARGV[2]
 SETTINGS=ARGV[3]
 
+def put_no_ssl(url, payload, headers={}, &block)
+  RestClient::Request.execute(method: :put, url: url, :payload => payload, headers: headers, verify_ssl: false, &block)
+end
 def psetting(setting)
   #puts "#{setting['category']}/#{setting['setting']} : #{setting['value']}"
   puts "SiteSetting#{setting['setting']}=\"#{setting['value']}\""
@@ -25,7 +28,7 @@ def jsetting(setting)
   my_hash[:api_username] = API_USERNAME
   psetting(setting)
   begin
-    r = RestClient.put(url, my_hash)
+    r = put_no_ssl(url, my_hash)
   rescue => e
     puts "E! #{e}"
     puts "something's wrong with #{url} #{my_hash}"
